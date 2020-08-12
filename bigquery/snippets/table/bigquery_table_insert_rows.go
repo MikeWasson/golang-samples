@@ -56,6 +56,14 @@ func insertRows(projectID, datasetID, tableID string) error {
 		{Name: "Wylma Phlyntstone", Age: 29},
 	}
 	if err := inserter.Put(ctx, items); err != nil {
+                // Show rich error information
+                if e, ok := err.(bigquery.PutMultiError); ok {
+                        for _, rowError  := range e {
+                                fmt.Printf("InsertID: %v\n", rowError.InsertID)
+                                fmt.Printf("RowIndex: %v\n", rowError.RowIndex)
+                                fmt.Printf("Errors: %v\n", rowError.Errors)
+                        }
+                }
 		return err
 	}
 	return nil
